@@ -1,0 +1,6 @@
+#! /bin/bash
+
+PKG=__PACKAGE__
+if [ "$1" == "purge" ]; then
+        rm -rf "/var/lib/$PKG" "/etc/init.d/$PKG" "/etc/$PKG"
+fi

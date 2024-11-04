@@ -1,0 +1,14 @@
+[template]
+prefix="/__BUCKET__"
+src = "log4j.delivery.location.refinement.executor.tmpl"
+dest = "/var/lib/fk-pf-spark/conf/log4j-delivery-location-refinement-executor.properties.url"
+keys = [
+	"/log4j.delivery.location.refinement.executor"
+]
+
+uid = 3069
+gid = 3000
+mode = "0644"
+
+#reload_cmd = "/etc/init.d/__PACKAGE_DELIVERY_LOCATION_REFINEMENT__ stop; sleep 5; /etc/init.d/__PACKAGE_DELIVERY_LOCATION_REFINEMENT__ start"
+reload_cmd = "curl `cat /var/lib/fk-pf-spark/conf/log4j-delivery-location-refinement-executor.properties.url` > /var/lib/fk-pf-spark/conf/log4j-delivery-location-refinement-executor.properties"

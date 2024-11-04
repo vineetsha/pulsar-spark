@@ -1,0 +1,8 @@
+#! /bin/bash
+
+PKG=__PACKAGE__
+
+if [ -f /etc/init.d/$PKG ];then
+  bash /etc/init.d/$PKG stop
+  echo "Stopped the $PKG server"
+fi

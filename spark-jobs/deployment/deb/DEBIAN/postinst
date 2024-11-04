@@ -1,0 +1,57 @@
+#! /bin/bash -e
+
+PKG=__PACKAGE__
+USERNAME=__PACKAGE_USER__
+USERID=__PACKAGE_USERID__
+GROUPNAME=__PACKAGE_USERGROUP__
+GROUPID=__PACKAGE_USERGROUPID__
+LOG_DIR=__LOG_DIR__
+LOG_FILENAME=__LOG_FILENAME__
+LOG_FILEPATH=__LOG_FILEPATH__
+
+#create users if they don't exist
+if ! getent group $GROUPNAME > /dev/null; then
+  groupadd -g $GROUPID $GROUPNAME || echo "$PKG : Adding group $GROUPNAME <<FAILURE>>"| tee -a /var/log/dpkg.log || true
+fi
+
+if ! getent passwd $USERID > /dev/null; then
+  useradd -g $GROUPID -u $USERID $USERNAME || echo "$PKG : Adding user $USERNAME <<FAILURE>>" | tee -a /var/log/dpkg.log || true
+fi
+
+#cd /etc/$PKG
+#jar uf /var/lib/$PKG/$PKG.jar META-INF/container.yml
+#jar uf /var/lib/$PKG/$PKG.jar META-INF/ehcache.xml
+#jar uf /var/lib/$PKG/$PKG.jar META-INF/facility.yml
+#jar uf /var/lib/$PKG/$PKG.jar log4j.properties
+#cd -
+
+#if [ ! -d "$DIRECTORY" ]; then
+#	mkdir -p $LOG_DIR
+#fi
+touch $LOG_FILEPATH
+chown -R $USERNAME:$GROUPNAME $LOG_FILEPATH
+
+chown -R $USERNAME:$GROUPNAME /var/lib/$PKG
+chown -R $USERNAME:$GROUPNAME $LOG_DIR
+chown -R $USERNAME:$GROUPNAME /etc/$PKG
+chown $USERNAME:$GROUPNAME /etc/init.d/$PKG
+chmod -R 775 /etc/init.d/fk-ekl-spark-jobs
+chmod -R 775 /etc/init.d/fk-ekl-spark-bigfoot-ingestion
+chmod -R 775 /etc/init.d/fk-ekl-spark-bigfoot-ingestion-v2
+chmod -R 775 /etc/init.d/fk-ekl-spark-geocode-cache
+chmod -R 775 /etc/init.d/fk-ekl-spark-smart-lookup
+chmod -R 775 /etc/init.d/fk-ekl-spark-pings-ingestion
+chmod -R 775 /etc/init.d/fk-ekl-delivery-location-refinement
+chmod -R 775 /etc/init.d/fk-ekl-viesti-compass-streaming
+
+# openssl x509 -in /etc/fk-flo-rubycas-server/ssl/cert.pem -out rubycas.der -outform DER; export JAVA_HOME=/usr/lib/jvm/java-7-oracle;
+# sudo keytool -import -keystore $JAVA_HOME/jre/lib/security/cacerts -file rubycas.der -alias prodrubycas -deststorepass changeit
+
+#restart rsyslog
+sudo /etc/init.d/rsyslog restart
+
+#cosmos restart
+#sudo /etc/init.d/cosmos-collectd stop 
+#sudo /etc/init.d/cosmos-statsd stop
+#sudo /etc/init.d/cosmos-collectd start 
+#sudo /etc/init.d/cosmos-statsd start

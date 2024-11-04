@@ -1,0 +1,14 @@
+[template]
+prefix="/__BUCKET__"
+src = "log4j.bigfoot.ingestion.v2.executor.tmpl"
+dest = "/var/lib/fk-pf-spark/conf/log4j-bigfoot-ingestion-v2-executor.properties.url"
+keys = [
+	"/log4j.bigfoot.ingestion.v2.executor"
+]
+
+uid = 3069
+gid = 3000
+mode = "0644"
+
+#reload_cmd = "/etc/init.d/__PACKAGE_BIGFOOT__ stop; sleep 5; /etc/init.d/__PACKAGE_BIGFOOT__ start"
+reload_cmd = "curl `cat /var/lib/fk-pf-spark/conf/log4j-bigfoot-ingestion-v2-executor.properties.url` > /var/lib/fk-pf-spark/conf/log4j-bigfoot-ingestion-v2-executor.properties"

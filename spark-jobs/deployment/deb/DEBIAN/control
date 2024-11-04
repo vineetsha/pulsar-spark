@@ -1,0 +1,10 @@
+package: __PACKAGE__
+Version: __VERSION__
+Section: web
+Priority: optional
+Architecture: __ARCH__
+Essential: no
+Installed-Size: 19439
+Depends: oracle-j2sdk1.7, stream-relay, fk-config-service-confd, cosmos-collectd, cosmos-jmx
+Maintainer: FLIP <flip-dev@flipkart.com>
+Description: FLIP Spark Jobs Service

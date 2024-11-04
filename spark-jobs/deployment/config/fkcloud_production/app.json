@@ -1,0 +1,15 @@
+{
+  "servers" : [
+    {
+      "port" : "27755",
+      "host" : "__HOSTNAME__",
+      "process": "__PACKAGE__",
+      "queries" : [
+        {
+          "obj" : "*"
+        }
+      ],
+      "numQueryThreads" : 2
+    }
+  ]
+}

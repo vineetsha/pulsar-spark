@@ -1,0 +1,31 @@
+#!/bin/bash
+
+PACKAGE=__PACKAGE__
+USERNAME=__PACKAGE_USER__
+LOG_DIR=__LOG_DIR__
+LOG_FILENAME=__LOG_FILENAME__
+LOG_FILEPATH=__LOG_FILEPATH__
+
+case "$1" in
+  start)
+    ulimit -n 10000
+    sudo -u ${USERNAME} APP_ENV="hyd" CONFIG_SERVICE_ENDPOINT="10.24.0.32" CONFIG_SERVICE_PORT="80" /var/lib/fk-pf-spark/bin/spark-submit --total-executor-cores 14 --driver-java-options "-Dlog4j.configuration=file:/var/lib/fk-pf-spark/conf/log4j-compass-streaming.properties -Dcom.sun.management.jmxremote.port=46696 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.net.preferIPv4Stack=true" --supervise --driver-class-path "/usr/share/spark/jars/fk-ekl-spark-jobs.jar" --class "com.flipkart.StreamingAppNew" /var/lib/fk-ekl-spark-jobs/fk-ekl-spark-jobs.jar &
+  ;;
+  stop)
+    kill -s SIGTERM `pgrep -f StreamingAppNew`
+    sleep 30
+  ;;
+  force_kill)
+    pkill -9 -f "StreamingAppNew"
+  ;;
+  restart)
+    kill -s SIGTERM `pgrep -f StreamingAppNew`
+    sleep 30
+    ulimit -n 10000
+    sudo -u ${USERNAME} APP_ENV="hyd" CONFIG_SERVICE_ENDPOINT="10.24.0.32" CONFIG_SERVICE_PORT="80" /var/lib/fk-pf-spark/bin/spark-submit --total-executor-cores 14 --driver-java-options "-Dlog4j.configuration=file:/var/lib/fk-pf-spark/conf/log4j-compass-streaming.properties -Dcom.sun.management.jmxremote.port=46696 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.net.preferIPv4Stack=true" --supervise --driver-class-path "/usr/share/spark/jars/fk-ekl-spark-jobs.jar" --class "com.flipkart.StreamingAppNew" /var/lib/fk-ekl-spark-jobs/fk-ekl-spark-jobs.jar &
+  ;;
+  *)
+    echo "Usage $0 {start|stop|restart|status}"
+    exit 3
+  ;;
+esac
